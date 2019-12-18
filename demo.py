@@ -1,9 +1,12 @@
 import data
 import knn
+import svm
 
 data.show_image_samples()
-data.descew_data()
+data.deskew_data()
 data.show_image_samples()
+
+svm.train_svm('rbf', 4, data.x_train, data.y_train, data.x_val, data.y_val)
 
 # # Prepare the data
 # data.print_raw_data_info()

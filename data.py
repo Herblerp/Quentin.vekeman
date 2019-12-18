@@ -31,7 +31,7 @@ def print_raw_data_info():
     print(data_test.head(5))
 
 
-def descew_data():
+def deskew_data():
     for xi in range(x_train.shape[0]):
         x_train.values[xi] = deskew(x_train.values[xi].reshape(28, 28)).reshape(784)
     for xi in range(x_val.shape[0]):
