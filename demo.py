@@ -1,22 +1,33 @@
 import data
 import knn
 
-# Prepare the data
-data.print_raw_data_info()
-data.print_modified_data_info()
-
-# Example before skewing
 data.show_image_samples()
-
-# Train before skewing
-knn.train_knn(3, data.x_train, data.y_train, data.x_val, data.y_val)
-
-# Deskew the data
 data.descew_data()
-
-# Same examples after deskewing
 data.show_image_samples()
-knn.train_knn(3, data.x_train, data.y_train, data.x_val, data.y_val)
+
+# # Prepare the data
+# data.print_raw_data_info()
+# data.print_modified_data_info()
+#
+# # Example before skewing
+# data.show_image_samples()
+#
+# # # Train before skewing
+# # knn.train_knn(3, data.x_train, data.y_train, data.x_val, data.y_val)
+#
+# # Predict a number from the test set
+# # knn.predict_number(data.x_test, 0)
+#
+# # Deskew the data
+#data.descew_data()
+#
+# # Same examples after deskewing
+# data.show_image_samples()
+# knn.train_knn(3, data.x_train, data.y_train, data.x_val, data.y_val)
+#
+# # Predict a number from the test set
+# knn.predict_number(data.x_test, 0)
+# knn.predict_number(data.x_test, 2)
 
 # Knn_accuracies = []
 # number_of_neighbors = []
