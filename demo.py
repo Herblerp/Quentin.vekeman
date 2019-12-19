@@ -4,8 +4,14 @@ import svm
 import cnn
 
 data.show_image_samples()
-#data.deskew_data()
-cnn.train_nn(data.x_train, data.y_train, data.x_val, data.y_val, batch_size=200, epochs=50, hidden_units=64)
+# data.deskew_data()
+
+cnn.train_cnn(data.x_train, data.y_train, data.x_val, data.y_val, batch_size=86, epochs=2)
+
+# cnn.train_cnn(data.x_train, data.y_train, data.x_val, data.y_val, batch_size=86, epochs=1)
+# cnn.train_nn(data.x_train, data.y_train, data.x_val, data.y_val, batch_size=250, epochs=200, hidden_units=64)
+
+
 
 # data.deskew_data()
 # data.show_image_samples()
