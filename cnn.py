@@ -78,7 +78,7 @@ def train_cnn(x_train, y_train, x_val, y_val, batch_size, epochs):
     print("NN accuracy is ", cnn_accuracy)
 
 
-def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units):
+def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, verbosity):
 
     y_train_cnn = to_categorical(y_train, num_classes=10)  # To [0,0,0,0,0,1,0,0,0,0]
     y_val_cnn = to_categorical(y_val, num_classes=10)
@@ -101,7 +101,7 @@ def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units):
                         batch_size=batch_size,
                         epochs=epochs,
                         validation_data=(x_val_cnn, y_val_cnn),
-                        verbose=2)
+                        verbose=verbosity)
 
     val_acc = history.history['val_accuracy']
     plot_accuracy(val_acc, epochs, 'NN accuracy')

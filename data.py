@@ -22,11 +22,11 @@ x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.
 
 # Check the first few lines of the tables
 def print_raw_data_info():
-    print("RAW DATA INFO".center(80, "#"))
-    print("Train".center(40, "_"))
+    print(" RAW DATA INFO ".center(80, "#"))
+    print(" TRAIN ".center(40, "_"))
     print("Shape: ", data_train.shape)
     print(data_train.head(5))  # Return the first n rows from the DataFrame.
-    print("Test".center(40, "_"))
+    print(" TEST ".center(40, "_"))
     print("Shape: ", data_test.shape)
     print(data_test.head(5))
 
@@ -43,17 +43,17 @@ def deskew_data():
 
 
 def print_modified_data_info():
-    print("MODIFIED DATA INFO".center(80, "#"))
-    print("Y-TRAIN".center(40, "_"))
+    print(" MODIFIED DATA INFO ".center(80, "#"))
+    print(" Y-TRAIN ".center(40, "_"))
     print("Shape: ", y_train.shape)
     print(y_train)  # Array met labels
-    print("X-TRAIN".center(40, "_"))
+    print(" X-TRAIN ".center(40, "_"))
     print("Shape: ", x_train.shape)
     print(x_train)  # Train data without label column.
-    print("Y-VAL".center(40, "_"))
+    print(" Y-VAL ".center(40, "_"))
     print("Shape: ", y_val.shape)
     print(y_val)  # Array met labels
-    print("X-VAL".center(40, "_"))
+    print(" X-VAL ".center(40, "_"))
     print("Shape: ", x_val.shape)
     print(x_val)  # Array met labels
 
