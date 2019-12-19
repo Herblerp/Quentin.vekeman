@@ -1,12 +1,16 @@
 import data
 import knn
 import svm
+import cnn
 
 data.show_image_samples()
-data.deskew_data()
-data.show_image_samples()
+#data.deskew_data()
+cnn.train_nn(data.x_train, data.y_train, data.x_val, data.y_val, batch_size=200, epochs=50, hidden_units=64)
 
-svm.train_svm('rbf', 4, data.x_train, data.y_train, data.x_val, data.y_val)
+# data.deskew_data()
+# data.show_image_samples()
+
+# svm.train_svm('rbf', 4, data.x_train, data.y_train, data.x_val, data.y_val)
 
 # # Prepare the data
 # data.print_raw_data_info()
