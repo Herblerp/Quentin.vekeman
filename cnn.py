@@ -87,7 +87,7 @@ def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, v
 
     model = Sequential()
 
-    model.add(Dense(10, input_dim=784, activation='relu'))
+    model.add(Dense(784, input_dim=784, activation='relu'))
     model.add(Dense(hidden_units, activation='relu'))
     model.add(Dense(hidden_units, activation='relu'))
     model.add(Dense(10, activation='softmax'))
