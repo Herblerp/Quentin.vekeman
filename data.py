@@ -1,4 +1,5 @@
 import pandas
+import random as rnd
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.ndimage import interpolation
@@ -16,11 +17,16 @@ x_train = data_train.drop(["label"], axis='columns')  # Drop the label column.
 x_train = x_train / 255
 x_test = data_test / 255
 
-# Split the modified train set for validation.
-x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=1)
+x_val = None
+y_val = None
 
 
-# Check the first few lines of the tables
+def shuffle_data():
+
+    global x_train, x_val, y_train, y_val
+    x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2)
+
+
 def print_raw_data_info():
     print(" RAW DATA INFO ".center(80, "#"))
     print(" TRAIN ".center(40, "_"))
@@ -39,8 +45,6 @@ def deskew_data():
     for xi in range(x_test.shape[0]):
         x_test.values[xi] = deskew(x_test.values[xi].reshape(28, 28)).reshape(784)
 
-    # Check the modified data
-
 
 def print_modified_data_info():
     print(" MODIFIED DATA INFO ".center(80, "#"))
@@ -58,13 +62,10 @@ def print_modified_data_info():
     print(x_val)  # Array met labels
 
 
-# Display sample images
-def show_image_samples():
-    image1 = x_train.values[0].reshape(28, 28)  # Reshape 1*784 data to 28*28 image
-    image2 = x_train.values[1].reshape(28, 28)
+def show_sample_images(index):
+
+    image1 = x_train.values[index].reshape(28, 28)  # Reshape 1*784 data to 28*28 image
     plt.imshow(image1)
-    plt.show()
-    plt.imshow(image2)
     plt.show()
 
 
