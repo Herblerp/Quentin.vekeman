@@ -11,6 +11,8 @@ def train_knn(neighbours, x_train, y_train, x_val, y_val):
     knn_accuracy = round(knn.score(x_val, y_val) * 100, 2)
     print("Accuracy for %d neighbours = %f" % (neighbours, knn_accuracy))
 
+    return knn_accuracy
+
 
 def predict_number(x_test, index):
     y_test_pred = knn.predict(x_test.values[index].reshape(1, -1))

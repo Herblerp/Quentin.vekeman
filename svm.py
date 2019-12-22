@@ -11,6 +11,7 @@ def train_svm(kernel, degree, x_train, y_train, x_val, y_val):
     SVM_accuracy = round(SVM_accuracy, 2)
 
     print("SVM_accuracy is %", SVM_accuracy)
+    return SVM_accuracy
 
 def predict_number(x_test, index):
     y_test_pred = svm.predict(x_test.values[index].reshape(1, -1))
