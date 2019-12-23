@@ -1,6 +1,7 @@
 import data
 import knn
 import svm
+import cnn
 
 data.shuffle_data()
 data.deskew_data()
