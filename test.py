@@ -13,6 +13,8 @@ data.deskew_data()
 def test_knn_neighbours(k_max, iterations):
     accuracies = []
     number_of_neighbors = []
+    best_accuracy = 0
+    best_accuracy_k = 0
     for k in range(1, k_max+1):
         iteration_accuracies = []
         for iteration in range(1, iterations+1):
@@ -25,6 +27,10 @@ def test_knn_neighbours(k_max, iterations):
         print('Average accuracy for %d neighbours is %f' % (k, average_accuracy))
         accuracies.append(average_accuracy)
         number_of_neighbors.append(k)
+
+        if average_accuracy > best_accuracy:
+            best_accuracy = average_accuracy
+            best_accuracy_k = k
 
     trace1 = go.Scatter(
         y=accuracies,
@@ -44,6 +50,9 @@ def test_knn_neighbours(k_max, iterations):
                   )
     fig = dict(data=graph_data, layout=layout)
     plotly.iplot(fig)
+
+    print('Best accuracy measured for %d neighbours with an accuracy of %f' % (best_accuracy_k, best_accuracy))
+    return best_accuracy_k
 
 
 def knntest():
