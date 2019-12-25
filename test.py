@@ -6,24 +6,29 @@ import cnn
 import plotly.graph_objs as go
 import plotly.offline as plotly
 
+data.load_data()
 data.deskew_data()
-data.shuffle_data()
 
 
 def test_knn_neighbours(k_max, iterations, deskewed):
-    print('Testing accuracy for k in range 1 to %d with %d iterations each' % (k_max, iterations))
+
+    print(" KNN NEIGHBOURS TEST ".center(80, "*"))
+    print('Testing accuracy for k in range [1, %d] with %d iterations each.' % (k_max, iterations))
+
     accuracies = []
     number_of_neighbors = []
     best_accuracy = 0
     best_accuracy_k = 0
-    for k in range(1, k_max+1):
+    for k in range(1, k_max + 1):
         iteration_accuracies = []
-        for iteration in range(1, iterations+1):
+        for iteration in range(1, iterations + 1):
             data.shuffle_data()
             if deskewed:
-                knn_accuracy = knn.train_knn(k, data.x_train_desk, data.y_train_desk, data.x_val_desk, data.y_val_desk)
+                knn_accuracy = knn.train_knn(k, data.x_train_desk_shuffled, data.y_train_desk_shuffled,
+                                             data.x_val_desk_shuffled, data.y_val_desk_shuffled)
             else:
-                knn_accuracy = knn.train_knn(k, data.x_train, data.y_train, data.x_val, data.y_val)
+                knn_accuracy = knn.train_knn(k, data.x_train_shuffled, data.y_train_shuffled, data.x_val_shuffled,
+                                             data.y_val_shuffled)
             iteration_accuracies.append(round(knn_accuracy, 2))
             print('Accuracy for iteration %d with %d neighbours is %f' % (iteration, k, knn_accuracy))
 
@@ -60,7 +65,6 @@ def test_knn_neighbours(k_max, iterations, deskewed):
 
 
 def test_knn(k, iterations, deskewed):
-
     knn_accuracies = []
 
     for x in range(iterations):
@@ -81,7 +85,6 @@ def test_knn(k, iterations, deskewed):
 
 
 def test_svm(kernel, poly_grade, iterations, deskewed):
-
     svm_accuracies = []
 
     for x in range(iterations):
@@ -108,5 +111,3 @@ def test_svm(kernel, poly_grade, iterations, deskewed):
     print("Average of svm for %d iterations is %f" % (iterations, round(svm_average, 2)))
 
     return svm_average
-
-
