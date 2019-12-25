@@ -9,6 +9,7 @@ import plotly.offline as plotly
 data.load_data()
 data.deskew_data()
 
+cnn.train_nn(x_train_shuffled, y_train_shuffled, x_val_shuffled, y_val_shuffled, )
 
 def test_knn_neighbours(k_max, iterations, deskewed):
     print('*'.center(80, '*'))
