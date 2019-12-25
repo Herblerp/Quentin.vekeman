@@ -1,6 +1,8 @@
 import pandas
 import random as rnd
 import numpy as np
+from random import seed
+from random import randint
 from matplotlib import pyplot as plt
 from scipy.ndimage import interpolation
 from sklearn.model_selection import train_test_split
@@ -20,11 +22,29 @@ x_test = data_test / 255
 x_val = None
 y_val = None
 
+x_train_desk = None
+y_train_desk = None
+x_val_desk = None
+y_val_desk = None
+x_test_desk = None
+
 
 def shuffle_data():
+    
+    rand = randint(0, 5000)
+    print('Random_state set to %d' % rand)
 
     global x_train, x_val, y_train, y_val
-    x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2)
+    x_train, x_val, y_train, y_val = train_test_split(x_train,
+                                                      y_train,
+                                                      test_size=0.2,
+                                                      random_state=rand)
+
+    global x_train_desk, x_val_desk, y_train_desk, y_val_desk
+    x_train_desk, x_val_desk, y_train_desk, y_val_desk = train_test_split(x_train_desk,
+                                                                          y_train_desk,
+                                                                          test_size=0.2,
+                                                                          random_state=rand)
 
 
 def print_raw_data_info():
@@ -38,12 +58,16 @@ def print_raw_data_info():
 
 
 def deskew_data():
+
+    global x_train_desk, x_test_desk, y_train_desk
+    x_train_desk = pandas.DataFrame().reindex_like(x_train)
+    x_test_desk = pandas.DataFrame().reindex_like(x_test)
+    y_train_desk = np.copy(y_train)
+
     for xi in range(x_train.shape[0]):
-        x_train.values[xi] = deskew(x_train.values[xi].reshape(28, 28)).reshape(784)
-    for xi in range(x_val.shape[0]):
-        x_val.values[xi] = deskew(x_val.values[xi].reshape(28, 28)).reshape(784)
+        x_train_desk.values[xi] = deskew(x_train.values[xi].reshape(28, 28)).reshape(784)
     for xi in range(x_test.shape[0]):
-        x_test.values[xi] = deskew(x_test.values[xi].reshape(28, 28)).reshape(784)
+        x_test_desk.values[xi] = deskew(x_test.values[xi].reshape(28, 28)).reshape(784)
 
 
 def print_modified_data_info():
@@ -62,9 +86,9 @@ def print_modified_data_info():
     print(x_val)  # Array met labels
 
 
-def show_sample_images(index):
+def show_sample_image(x_data, index):
 
-    image1 = x_train.values[index].reshape(28, 28)  # Reshape 1*784 data to 28*28 image
+    image1 = x_data.values[index].reshape(28, 28)  # Reshape 1*784 data to 28*28 image
     plt.imshow(image1)
     plt.show()
 
