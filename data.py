@@ -63,8 +63,8 @@ def deskew_data():
 
 # Split and shuffle the normal and deskewed data using the same random seed (so same-indexed images are equal)
 def shuffle_data():
+
     rand = randint(0, 5000)
-    print('Random_state set to %d' % rand)
 
     global x_train, y_train, x_train_shuffled, y_train_shuffled, x_val_shuffled, y_val_shuffled
 
@@ -81,6 +81,8 @@ def shuffle_data():
         y_train_desk,
         test_size=0.2,
         random_state=rand)
+
+    return rand
 
 
 def print_data_info():
