@@ -9,15 +9,6 @@ import plotly.offline as plotly
 data.deskew_data()
 data.shuffle_data()
 
-data.show_sample_image(data.x_train, 0)
-data.show_sample_image(data.x_train_desk, 0)
-
-data.show_sample_image(data.x_val, 0)
-data.show_sample_image(data.x_val_desk, 0)
-
-data.show_sample_image(data.x_test, 0)
-data.show_sample_image(data.x_test_desk, 0)
-
 
 def test_knn_neighbours(k_max, iterations, deskewed):
     print('Testing accuracy for k in range 1 to %d with %d iterations each' % (k_max, iterations))
@@ -30,7 +21,7 @@ def test_knn_neighbours(k_max, iterations, deskewed):
         for iteration in range(1, iterations+1):
             data.shuffle_data()
             if deskewed:
-                knn_accuracy = knn.train_knn(k, data.x_train_desk, data.y_train, data.x_val, data.y_val)
+                knn_accuracy = knn.train_knn(k, data.x_train_desk, data.y_train_desk, data.x_val_desk, data.y_val_desk)
             else:
                 knn_accuracy = knn.train_knn(k, data.x_train, data.y_train, data.x_val, data.y_val)
             iteration_accuracies.append(round(knn_accuracy, 2))
@@ -53,7 +44,7 @@ def test_knn_neighbours(k_max, iterations, deskewed):
     )
 
     graph_data = [trace1]
-    layout = dict(title='KNN Accuracy',
+    layout = dict(title='KNN Accuracy with descewed: ' + str(deskewed),
                   autosize=False,
                   width=800,
                   height=500,
@@ -68,15 +59,20 @@ def test_knn_neighbours(k_max, iterations, deskewed):
     return best_accuracy_k
 
 
-def test_knn(k, iterations):
+def test_knn(k, iterations, deskewed):
 
     knn_accuracies = []
 
     for x in range(iterations):
         data.shuffle_data()
-        accuracy = knn.train_knn(3, data.x_train, data.y_train, data.x_val, data.y_val)
+
+        if deskewed:
+            accuracy = knn.train_knn(k, data.x_train_desk, data.y_train_desk, data.x_val_desk, data.y_val_desk)
+        else:
+            accuracy = knn.train_knn(k, data.x_train, data.y_train, data.x_val, data.y_val)
+
         knn_accuracies.append(accuracy)
-        print('Accuracy of knn for iteration %d is %f' % (k, accuracy))
+        print('Accuracy of knn for iteration %d is %f' % (x, accuracy))
 
     knn_average = sum(knn_accuracies) / len(knn_accuracies)
     print("Average of knn for %d iterations is %f" % (iterations, round(knn_average, 2)))
@@ -84,16 +80,32 @@ def test_knn(k, iterations):
     return knn_average
 
 
-def test_svm():
-    svm_iterations = 2
+def test_svm(kernel, poly_grade, iterations, deskewed):
+
     svm_accuracies = []
 
-    for x in range(svm_iterations):
+    for x in range(iterations):
         data.shuffle_data()
-        svm_accuracies.append(svm.train_svm('rbf', 0, data.x_train, data.y_train, data.x_val, data.y_val))
+        if deskewed:
+            accuracy = svm.train_svm(kernel,
+                                     poly_grade,
+                                     data.x_train_desk,
+                                     data.y_train_desk,
+                                     data.x_val_desk,
+                                     data.y_val_desk)
+        else:
+            accuracy = svm.train_svm(kernel,
+                                     poly_grade,
+                                     data.x_train,
+                                     data.y_train,
+                                     data.x_val,
+                                     data.y_val)
+
+        svm_accuracies.append(accuracy)
+        print('Accuracy of svm with %s kernel for iteration %d is %f' % (kernel, x, accuracy))
 
     svm_average = sum(svm_accuracies) / len(svm_accuracies)
-    print("Average of svm for %d iterations is %f" % (svm_iterations, round(svm_average, 2)))
+    print("Average of svm for %d iterations is %f" % (iterations, round(svm_average, 2)))
 
     return svm_average
 

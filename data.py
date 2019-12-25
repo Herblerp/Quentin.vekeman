@@ -39,6 +39,7 @@ def shuffle_data():
                                                       y_train,
                                                       test_size=0.2,
                                                       random_state=rand)
+    print("Dimention of x_train is " + str(x_train.shape))
 
     global x_train_desk, x_val_desk, y_train_desk, y_val_desk
     x_train_desk, x_val_desk, y_train_desk, y_val_desk = train_test_split(x_train_desk,
