@@ -8,8 +8,8 @@ import plotly.offline as plotly
 
 data.load_data()
 data.deskew_data()
+data.shuffle_data()
 
-cnn.train_nn(x_train_shuffled, y_train_shuffled, x_val_shuffled, y_val_shuffled, )
 
 def test_knn_neighbours(k_max, iterations, deskewed):
     print('*'.center(80, '*'))
@@ -35,7 +35,7 @@ def test_knn_neighbours(k_max, iterations, deskewed):
         for iteration in range(iterations):
 
             print('-'.center(20, '-'))
-            print('K = %d ITERATION %d'.center(20) % (k, iteration+1))
+            print('K = %d ITERATION %d'.center(20) % (k, iteration + 1))
             print('-'.center(20, '-'))
 
             random_state = data.shuffle_data()
@@ -107,7 +107,7 @@ def test_knn(k, iterations, deskewed):
     for iteration in range(iterations):
 
         print('-'.center(20, '-'))
-        print('ITERATION %d'.center(20) % (iteration+1))
+        print('ITERATION %d'.center(20) % (iteration + 1))
         print('-'.center(20, '-'))
 
         random_state = data.shuffle_data()
@@ -150,7 +150,7 @@ def test_svm(kernel, iterations, deskewed, grade=0):
     for iteration in range(iterations):
 
         print('-'.center(20, '-'))
-        print('ITERATION %d'.center(20) % (iteration+1))
+        print('ITERATION %d'.center(20) % (iteration + 1))
         print('-'.center(20, '-'))
 
         random_state = data.shuffle_data()
@@ -182,5 +182,39 @@ def test_svm(kernel, iterations, deskewed, grade=0):
     return svm_average
 
 
-def test_nn(hidden_units, iterations, deskewed):
-    return None
+def test_nn(layers_min, layers_max, layers_interval, hu_min, hu_max, hu_interval, batch_size_min, batch_size_max,
+            batch_size_interval, optimizer, epochs, deskewed, verbosity):
+    print('*'.center(80, '*'))
+    print(' NN TEST '.center(80))
+    print('*'.center(80, '*'))
+    print('Testing accuracy for neural net with %s optimizer for %d epochs' % (optimizer, epochs))
+    print('Deskewed: ' + str(deskewed))
+    print()
+
+    iteration = 1
+
+    for batch_size in range(batch_size_min, batch_size_max + 1, batch_size_interval):
+        for layers in range(layers_min, layers_max + 1, layers_interval):
+            for hu in range(hu_min, hu_max + 1, hu_interval):
+                print('-'.center(20, '-'))
+                print('ITERATION %d'.center(20) % iteration)
+                print('-'.center(20, '-'))
+                print('Batch_size = %d' % batch_size)
+                print('Hidden_layers = %d' % layers)
+                print('Hidden_units = %d' % hu)
+                if deskewed:
+                    accuracy = cnn.train_nn(data.x_train_desk_shuffled,
+                                            data.y_train_desk_shuffled,
+                                            data.x_val_desk_shuffled,
+                                            data.y_val_desk_shuffled,
+                                            batch_size, epochs, hu, layers, optimizer, verbosity)
+                else:
+                    accuracy = cnn.train_nn(data.x_train_shuffled,
+                                            data.y_train_shuffled,
+                                            data.x_val_shuffled,
+                                            data.y_val_shuffled,
+                                            batch_size, epochs, hu, layers, optimizer, verbosity)
+                print('Accuracy = %f' % round(accuracy, 2))
+                iteration += 1
+
+    # Keep and print best accuracy results

@@ -107,17 +107,17 @@ def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, l
                         verbose=verbosity)
 
     val_acc = history.history['val_accuracy']
-    plot_accuracy(val_acc, epochs, 'NN accuracy')
+    # plot_accuracy(val_acc, epochs, 'NN accuracy')
 
     nn_accuracy = round(max(val_acc) * 100, 2)
-    print("NN accuracy is ", nn_accuracy)
+    return nn_accuracy
 
 
 def plot_accuracy(val_acc, epochs, title):
 
     accuracy = []
     num_of_epochs = []
-    for i in range(1, epochs, 5):
+    for i in range(1, epochs):
         accuracy.append(round(100 * val_acc[i], 3))
         num_of_epochs.append(i)
     trace1 = go.Scatter(y=accuracy, x=num_of_epochs, mode="lines")
