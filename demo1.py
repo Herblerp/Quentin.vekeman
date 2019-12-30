@@ -16,7 +16,8 @@ data.show_image_samples()
 data.print_modified_data_info()
 
 # KNN before deskewing
-knn.train_knn(3, data.x_train, data.y_train, data.x_val, data.y_val)
+knn.train_knn(3, data.x_train, data.y_train)
+knn.calculate_accuracy(data.x_val, data.y_val)
 
 # Some test data predictions
 knn.predict_number(data.x_test, 0)
@@ -27,7 +28,8 @@ data.deskew_data()
 data.show_image_samples()
 
 # KNN after deskewing
-knn.train_knn(3, data.x_train, data.y_train, data.x_val, data.y_val)
+knn.train_knn(3, data.x_train, data.y_train)
+knn.calculate_accuracy(data.x_val, data.y_val)
 
 # Some test data predictions
 knn.predict_number(data.x_test, 0)

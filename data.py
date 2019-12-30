@@ -17,7 +17,7 @@ x_train = x_train / 255
 x_test = data_test / 255
 
 # Split the modified train set for validation.
-x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=1)
+x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=1)
 
 
 # Check the first few lines of the tables
