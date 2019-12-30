@@ -75,8 +75,10 @@ def train_cnn(x_train, y_train, x_val, y_val, batch_size, epochs):
 
     val_acc = history.history['val_accuracy']
 
+    plot_accuracy(val_acc, epochs, 'CNN Accuracy')
+
     cnn_accuracy = round(max(val_acc) * 100, 2)
-    print("NN accuracy is ", cnn_accuracy)
+    return cnn_accuracy
 
 
 def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, layers, optimizer, verbosity):
@@ -107,7 +109,7 @@ def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, l
                         verbose=verbosity)
 
     val_acc = history.history['val_accuracy']
-    # plot_accuracy(val_acc, epochs, 'NN accuracy')
+    plot_accuracy(val_acc, epochs, 'NN accuracy | %d layers | %d HU | %s optimizer' % (layers, hidden_units, optimizer))
 
     nn_accuracy = round(max(val_acc) * 100, 2)
     return nn_accuracy
@@ -131,4 +133,4 @@ def plot_accuracy(val_acc, epochs, title):
                   font=dict(size=14)
                   )
     fig = dict(data=data, layout=layout)
-    py.plot(fig)
+    py.iplot(fig)

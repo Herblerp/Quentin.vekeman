@@ -4,7 +4,7 @@ import svm
 import cnn
 
 import plotly.graph_objs as go
-import plotly.offline as plotly
+import plotly.offline as py
 
 data.load_data()
 data.deskew_data()
@@ -57,7 +57,7 @@ def test_knn_neighbours(k_max, iterations, deskewed):
         accuracies.append(average_accuracy)
         number_of_neighbors.append(k)
 
-        print(' Average accuracy for K = %d is %f '.center(80, '*') % (k, average_accuracy))
+        print((' Average accuracy for K = %d is %f ' % (k, average_accuracy)).center(80, '#'))
         print()
 
         # Check if average is higher than current best
@@ -83,11 +83,12 @@ def test_knn_neighbours(k_max, iterations, deskewed):
                   font=dict(size=14)
                   )
     fig = dict(data=graph_data, layout=layout)
-    plotly.iplot(fig)
+    py.iplot(fig)
 
     # Print and return results
-    print(' Best accuracy measured for K = %d with an accuracy of %f '.center(80, '*') % (
-        best_accuracy_k, best_accuracy))
+    print((' Best accuracy measured for K = %d with an accuracy of %f ' % (
+        best_accuracy_k, best_accuracy)).center(80, '#'))
+    print()
     print()
 
     return best_accuracy_k
@@ -127,9 +128,9 @@ def test_knn(k, iterations, deskewed):
     knn_average = sum(knn_accuracies) / len(knn_accuracies)
 
     # Print and return results
-    print(" Average accuracy for %d iterations is %f ".center(80, '*') % (iterations, round(knn_average, 2)))
+    print((' Average accuracy for %d iterations is %f ' % (iterations, round(knn_average, 2))).center(80, '#'))
     print()
-
+    print()
     return knn_average
 
 
@@ -176,14 +177,14 @@ def test_svm(kernel, iterations, deskewed, grade=0):
 
     svm_average = sum(svm_accuracies) / len(svm_accuracies)
 
-    print(" Average of SVM with %s kernel for %d iterations is %f ".center(80, '*') % (
-        kernel, iterations, round(svm_average, 2)))
+    print((' Average of SVM with %s kernel for %d iterations is %f ' % (
+        kernel, iterations, round(svm_average, 2))).center(80, '#'))
 
     return svm_average
 
 
-def test_nn(layers_min, layers_max, layers_interval, hu_min, hu_max, hu_interval, batch_size_min, batch_size_max,
-            batch_size_interval, optimizer, epochs, deskewed, verbosity):
+def test_nn(layers_min, layers_max, layers_interval, hu_min, hu_max, hu_interval, batch_size, optimizer, epochs,
+            deskewed):
     print('*'.center(80, '*'))
     print(' NN TEST '.center(80))
     print('*'.center(80, '*'))
@@ -192,29 +193,57 @@ def test_nn(layers_min, layers_max, layers_interval, hu_min, hu_max, hu_interval
     print()
 
     iteration = 1
+    max_acc = 0
+    max_acc_layers = 0
+    max_acc_hu = 0
 
-    for batch_size in range(batch_size_min, batch_size_max + 1, batch_size_interval):
-        for layers in range(layers_min, layers_max + 1, layers_interval):
-            for hu in range(hu_min, hu_max + 1, hu_interval):
-                print('-'.center(20, '-'))
-                print('ITERATION %d'.center(20) % iteration)
-                print('-'.center(20, '-'))
-                print('Batch_size = %d' % batch_size)
-                print('Hidden_layers = %d' % layers)
-                print('Hidden_units = %d' % hu)
-                if deskewed:
-                    accuracy = cnn.train_nn(data.x_train_desk_shuffled,
-                                            data.y_train_desk_shuffled,
-                                            data.x_val_desk_shuffled,
-                                            data.y_val_desk_shuffled,
-                                            batch_size, epochs, hu, layers, optimizer, verbosity)
-                else:
-                    accuracy = cnn.train_nn(data.x_train_shuffled,
-                                            data.y_train_shuffled,
-                                            data.x_val_shuffled,
-                                            data.y_val_shuffled,
-                                            batch_size, epochs, hu, layers, optimizer, verbosity)
-                print('Accuracy = %f' % round(accuracy, 2))
-                iteration += 1
+    rand = data.shuffle_data()
+    print('Random_state: %d' % rand)
 
-    # Keep and print best accuracy results
+    for layers in range(layers_min, layers_max + 1, layers_interval):
+        for hu in range(hu_min, hu_max + 1, hu_interval):
+            print('-'.center(20, '-'))
+            print('ITERATION %d'.center(20) % iteration)
+            print('-'.center(20, '-'))
+            print('Batch_size = %d' % batch_size)
+            print('Hidden_layers = %d' % layers)
+            print('Hidden_units = %d' % hu)
+            if deskewed:
+                accuracy = cnn.train_nn(data.x_train_desk_shuffled,
+                                        data.y_train_desk_shuffled,
+                                        data.x_val_desk_shuffled,
+                                        data.y_val_desk_shuffled,
+                                        batch_size, epochs, hu, layers, optimizer, 0)
+            else:
+                accuracy = cnn.train_nn(data.x_train_shuffled,
+                                        data.y_train_shuffled,
+                                        data.x_val_shuffled,
+                                        data.y_val_shuffled,
+                                        batch_size, epochs, hu, layers, optimizer, 0)
+            print('Accuracy = %f' % round(accuracy, 2))
+            iteration += 1
+            if accuracy > max_acc:
+                max_acc = accuracy
+                max_acc_hu = hu
+                max_acc_layers = layers
+
+    print('-'.center(20, '-'))
+    print(' BEST RESULT '.center(80, '#'))
+    print('-'.center(20, '-'))
+    print('Accuracy = %f' % max_acc)
+    print('Hidden_layers = %d' % max_acc_layers)
+    print('Hidden_units = %d' % max_acc_hu)
+
+    return max_acc
+
+def test_cnn(deskewed):
+
+    print('*'.center(80, '*'))
+    print(' NN TEST '.center(80))
+    print('*'.center(80, '*'))
+    print('Testing accuracy for CNN over 30 epochs')
+
+    rand = data.shuffle_data()
+    print('Random_state: %d' % rand)
+
+    cnn.train_cnn(data.x_train_shuffled, data.y_train_shuffled, data.x_val_shuffled, data.y_val_shuffled, 86, 30)
