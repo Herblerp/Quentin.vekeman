@@ -7,6 +7,7 @@ from keras.utils.np_utils import to_categorical # convert to one-hot-encoding
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, Activation
 from keras.optimizers import RMSprop
+from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
 
@@ -78,7 +79,7 @@ def train_cnn(x_train, y_train, x_val, y_val, batch_size, epochs):
     print("NN accuracy is ", cnn_accuracy)
 
 
-def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, verbosity):
+def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, layers, optimizer, verbosity):
 
     y_train_cnn = to_categorical(y_train, num_classes=10)  # To [0,0,0,0,0,1,0,0,0,0]
     y_val_cnn = to_categorical(y_val, num_classes=10)
@@ -87,12 +88,14 @@ def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, v
 
     model = Sequential()
 
-    model.add(Dense(10, input_dim=784, activation='relu'))
-    model.add(Dense(hidden_units, activation='relu'))
-    model.add(Dense(hidden_units, activation='relu'))
+    model.add(Dense(784, input_dim=784, activation='relu'))
+
+    for layer in range(layers):
+        model.add(Dense(hidden_units, activation='relu'))
+
     model.add(Dense(10, activation='softmax'))
 
-    model.compile(optimizer='rmsprop',
+    model.compile(optimizer=optimizer,
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
@@ -104,17 +107,17 @@ def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, v
                         verbose=verbosity)
 
     val_acc = history.history['val_accuracy']
-    plot_accuracy(val_acc, epochs, 'NN accuracy')
+    # plot_accuracy(val_acc, epochs, 'NN accuracy')
 
     nn_accuracy = round(max(val_acc) * 100, 2)
-    print("NN accuracy is ", nn_accuracy)
+    return nn_accuracy
 
 
 def plot_accuracy(val_acc, epochs, title):
 
     accuracy = []
     num_of_epochs = []
-    for i in range(1, epochs, 5):
+    for i in range(1, epochs):
         accuracy.append(round(100 * val_acc[i], 3))
         num_of_epochs.append(i)
     trace1 = go.Scatter(y=accuracy, x=num_of_epochs, mode="lines")
