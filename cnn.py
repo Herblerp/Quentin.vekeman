@@ -1,9 +1,9 @@
 import itertools
 import numpy as np
-import plotly.graph_objs as go
 import plotly.offline as py
+import plotly.graph_objs as go
 
-from keras.utils.np_utils import to_categorical # convert to one-hot-encoding
+from keras.utils.np_utils import to_categorical  # convert to one-hot-encoding
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, Activation
 from keras.optimizers import RMSprop
@@ -11,14 +11,15 @@ from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
 
+py.init_notebook_mode(connected=True)
+
 
 def train_cnn(x_train, y_train, x_val, y_val, batch_size, epochs):
-
     y_train_cnn = to_categorical(y_train, num_classes=10)  # To [0,0,0,0,0,1,0,0,0,0]
     y_val_cnn = to_categorical(y_val, num_classes=10)
     x_train_cnn = x_train.values.reshape(-1, 28, 28, 1)  # Extra dimention for rgb channels
     x_val_cnn = x_val.values.reshape(-1, 28, 28, 1)
-    #x_test_cnn = x_test.values.reshape(-1, 28, 28, 1)
+    # x_test_cnn = x_test.values.reshape(-1, 28, 28, 1)
 
     model = Sequential()
 
@@ -82,7 +83,6 @@ def train_cnn(x_train, y_train, x_val, y_val, batch_size, epochs):
 
 
 def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, layers, optimizer, verbosity):
-
     y_train_cnn = to_categorical(y_train, num_classes=10)  # To [0,0,0,0,0,1,0,0,0,0]
     y_val_cnn = to_categorical(y_val, num_classes=10)
     x_train_cnn = x_train.values.reshape(-1, 784)
@@ -116,12 +116,12 @@ def train_nn(x_train, y_train, x_val, y_val, batch_size, epochs, hidden_units, l
 
 
 def plot_accuracy(val_acc, epochs, title):
-
     accuracy = []
     num_of_epochs = []
     for i in range(1, epochs):
         accuracy.append(round(100 * val_acc[i], 3))
         num_of_epochs.append(i)
+
     trace1 = go.Scatter(y=accuracy, x=num_of_epochs, mode="lines")
     data = [trace1]
     layout = dict(title=title,

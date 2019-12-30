@@ -6,6 +6,8 @@ import cnn
 import plotly.graph_objs as go
 import plotly.offline as py
 
+py.init_notebook_mode(connected=True)
+
 data.load_data()
 data.deskew_data()
 data.shuffle_data()
@@ -74,7 +76,7 @@ def test_knn_neighbours(k_max, iterations, deskewed):
     )
 
     graph_data = [trace1]
-    layout = dict(title='KNN Accuracy with descewed: ' + str(deskewed),
+    layout = dict(title='KNN average accuracy for amount of neighbours | Descewed: ' + str(deskewed),
                   autosize=False,
                   width=800,
                   height=500,
@@ -236,8 +238,8 @@ def test_nn(layers_min, layers_max, layers_interval, hu_min, hu_max, hu_interval
 
     return max_acc
 
-def test_cnn(deskewed):
 
+def test_cnn(deskewed):
     print('*'.center(80, '*'))
     print(' NN TEST '.center(80))
     print('*'.center(80, '*'))
@@ -245,5 +247,10 @@ def test_cnn(deskewed):
 
     rand = data.shuffle_data()
     print('Random_state: %d' % rand)
+    print('Deskewed: ', str(deskewed))
 
-    cnn.train_cnn(data.x_train_shuffled, data.y_train_shuffled, data.x_val_shuffled, data.y_val_shuffled, 86, 30)
+    if deskewed:
+        cnn.train_cnn(data.x_train_desk_shuffled, data.y_train_desk_shuffled, data.x_val_desk_shuffled,
+                      data.y_val_desk_shuffled, 86, 30)
+    else:
+        cnn.train_cnn(data.x_train_shuffled, data.y_train_shuffled, data.x_val_shuffled, data.y_val_shuffled, 86, 30)
